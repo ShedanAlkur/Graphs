@@ -8,34 +8,54 @@ namespace GraphControl
 {
     public struct Vector2
     {
+        /// <summary>
+        /// Возвращает или задает координату X вектора.
+        /// </summary>
         public int X { get; set; }
+        /// <summary>
+        /// Возвращает или задает координату X вектора.
+        /// </summary>
         public int Width { get { return X; } set { X = value; } }
 
+        /// <summary>
+        /// Возвращает или задает координату Y вектора.
+        /// </summary>
         public int Y { get; set; }
+        /// <summary>
+        /// Возвращает или задает координату Y вектора.
+        /// </summary>
         public int Height { get { return Y; } set {Y = value; } }
 
-        public float Lenght() => (float)Math.Sqrt(X * X + Y * Y);
+        /// <summary>
+        /// Возвращает длину вектора.
+        /// </summary>
+        public double Lenght => Math.Sqrt(X * X + Y * Y);
+        /// <summary>
+        /// Возвращает квадрат длины вектора.
+        /// </summary>
+        public int SqrLenght => X * X + Y * Y;
 
         #region --Конструкторы--
+        /// <summary>
+        /// Инициализирует новый экзмепляр структуры.
+        /// </summary>
+        /// <param name="x">Возвращает или задает координату X вектора.</param>
+        /// <param name="y">Возвращает или задает координату Y вектора.</param>
         public Vector2(int x, int y)
         {
             this.X = x;
             this.Y = y;
         }
-        public Vector2(int x)
+
+        /// <summary>
+        /// Инициализирует новый экзмепляр структуры по длине вектора и его углу наклона.
+        /// </summary>
+        /// <param name="radius">Длина вектора.</param>
+        /// <param name="angle">Угол (в радианах) между вектором и осью OX.</param>
+        /// <returns>Инициадизированый вектор.</returns>
+        public static Vector2 CreateByAngle(int radius, double angle)
         {
-            this.X = x;
-            this.Y = x;
-        }
-        public Vector2(Point point)
-        {
-            this.X = point.X;
-            this.Y = point.Y;
-        }
-        public Vector2(Size size)
-        {
-            this.X = size.Width;
-            this.Y = size.Height;
+            return new Vector2((int)(Math.Cos(angle) * radius), (int)(Math.Sin(angle) * radius));
         }
         #endregion
 
@@ -58,22 +78,31 @@ namespace GraphControl
         {
             return new Point(vector.X, vector.Y);
         }
+
         public static implicit operator PointF(Vector2 vector)
         {
             return new Point(vector.X, vector.Y);
         }
+
         public static implicit operator Size(Vector2 vector)
         {
             return new Size(vector.X, vector.Y);
         }
+
         public static implicit operator Vector2(Point point)
         {
             return new Vector2(point.X, point.Y);
         }
+
         public static implicit operator Vector2(Size size)
         {
             return new Vector2(size.Width, size.Height);
         }
         #endregion
+
+        public override string ToString()
+        {
+            return $"x = {X}, y = {Y}";
+        }
     }
 }
