@@ -41,24 +41,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GraphControl.GraphProperties.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="EdgeData.cs" />
-    <Compile Include="Ellipse.cs" />
+    <Compile Include="Circle.cs" />
+    <Compile Include="NodeData.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GraphControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="GraphControl.Designer.cs">
       <DependentUpon>GraphControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="NodeData.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestUserControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="TestUserControl.Designer.cs">
-      <DependentUpon>TestUserControl.cs</DependentUpon>
+    <Compile Include="GraphControl.Graph.cs">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Vector2.cs" />
-    <Compile Include="VisGraph.cs" />
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
