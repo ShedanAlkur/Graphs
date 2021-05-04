@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlgoritmResult.cs" />
+    <Compile Include="NodePair.cs" />
+    <Compile Include="Graph.Althoritm.cs" />
     <Compile Include="Edge.cs" />
     <Compile Include="Graph.cs" />
     <Compile Include="Node.cs" />
