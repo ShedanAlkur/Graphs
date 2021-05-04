@@ -78,14 +78,14 @@ namespace GraphControl
             this.outlineWidth = outlineWidth;
             this.diameter = diameter;
             int fillRadius = diameter / 2;
-            int outlineRadius = this.outlineWidth / 2;
+            int halfOutlineWidth = this.outlineWidth / 2;
 
             this.FillEllipse =
                 new Circle(middle.X - fillRadius, middle.Y - fillRadius, diameter);
             this.OutlineEllipse =
-                new Circle(middle.X + outlineRadius - fillRadius,
-                middle.Y + outlineRadius - fillRadius,
-                diameter - outlineRadius);
+                new Circle(middle.X - fillRadius  + halfOutlineWidth, middle.Y - fillRadius + halfOutlineWidth, 
+                diameter - outlineWidth);
+
         }
 
         public override string ToString()

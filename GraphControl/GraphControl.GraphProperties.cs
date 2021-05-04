@@ -109,7 +109,12 @@ namespace GraphControl
         public int GraphOutlineWidth
         {
             get { return graphOutlineWidth; }
-            set { graphOutlineWidth = value; Invalidate(); }
+            set { 
+                graphOutlineWidth = value;
+                outlinePen = new Pen(graphDefaultOutlineClr, graphOutlineWidth);
+                programSelectionOutlinePen = new Pen(graphProgramOutlineClr, graphOutlineWidth);
+                Invalidate(); 
+            }
         }
 
         [Category("Внешний вид"), Description("Длина наконечника стрелки у ориентированного ребра графа.")
