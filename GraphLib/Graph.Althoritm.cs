@@ -8,10 +8,6 @@ namespace GraphLib
     // В этой части класса описываются все алгоритмы обработки математического графа.
     public partial class Graph<N, E>
     {
-        /// <summary>
-        /// Вспомогательный массив.
-        /// </summary>
-        bool[] used;
 
         /// <summary>
         /// Содержит ли граф петли.
@@ -19,6 +15,7 @@ namespace GraphLib
         /// </summary>
         public bool ContainsLoop()
         {
+            bool[] used;
             bool directed = Directed;
             if (!directed && !Undirected)
                 throw new InvalidOperationException("Граф должен быть строго ориентирован или не ориентирован.");
@@ -26,7 +23,7 @@ namespace GraphLib
             foreach (var node in nodes)
             {
                 used = new bool[nodes.Count];
-                if (ContainsLoop(node, node, directed)) return true;
+                if (ContainsLoop(node, node, directed, ref used)) return true;
             }
             return false;
         }
@@ -38,7 +35,7 @@ namespace GraphLib
         /// <param name="parent">Родительская вершина, из которой был вызван поиск в этой вершине.</param>
         /// <param name="directed">Ориентирован ли граф.</param>
         /// <returns>Содержит ли граф цикл.</returns>
-        private bool ContainsLoop(Node<N, E> current, Node<N, E> parent, bool directed)
+        private bool ContainsLoop(Node<N, E> current, Node<N, E> parent, bool directed, ref bool[] used)
         {
             used[nodes.IndexOf(current)] = true;
 
@@ -48,14 +45,14 @@ namespace GraphLib
                 if (!directed)
                 {
                     if (!used[nodes.IndexOf(near)])
-                    { if (ContainsLoop(near, current, directed)) return true; }
+                    { if (ContainsLoop(near, current, directed, ref used)) return true; }
                     else if (parent.Id != near.Id) return true;
 
                 }
                 else if (current.edges.Exists(x => x.Сontain(current, near)))
                 {
                     if (!used[nodes.IndexOf(near)])
-                    { if (ContainsLoop(near, current, directed)) return true; }
+                    { if (ContainsLoop(near, current, directed, ref used)) return true; }
                     else return true;
                 }
             }
@@ -178,11 +175,23 @@ namespace GraphLib
                         resultNodes.Add(edges[pair.Edge].Node2);
                     resultEdges.Add(edges[pair.Edge]);
                 }
-                return new AlgoritmResult<N, E>(true, "Построено минимальное оставное дерево.", resultNodes, resultEdges);
+                return new AlgoritmResult<N, E>(true,
+                    "Построено минимальное " + 
+                    ((directed) ? "ориентированное" : "неориентированное" + " оставное дерево длиной ") + 
+                    result.Sum(p => p.Value) + ".", resultNodes, resultEdges);
 
             }
             else
                 return new AlgoritmResult<N, E>(false, "Невозможно применить алгоритм - в графе содержатся и ориентированные, и неориентированные ребра.", null, null);
+        }
+
+        public AlgoritmResult<N, E> ShortestPath(Node<N, E> start, Node<N, E> end)
+        {
+            if (!nodes.Contains(start) || !nodes.Contains(end))
+                throw new ArgumentException("Граф не содержит указанные вершины-параметры");
+
+
+            throw new NotImplementedException();
         }
     }
 }
