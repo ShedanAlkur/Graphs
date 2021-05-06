@@ -340,6 +340,9 @@ namespace GraphControl
 
         #endregion
 
+        #region -Алгоритмы над графом-
+
+
         /// <summary>
         /// Выполняет программный поиск вершин с четными id номерами.
         /// </summary>
@@ -350,7 +353,7 @@ namespace GraphControl
             SelectedNodesByProg = algoritmResult.Nodes;
             SelectedEdgesByProg = algoritmResult.Edges;
 
-            ShowElementsSelectedByProgram = true;
+            ShowElementsSelectedByProgram = algoritmResult.Success;
             Invalidate();
             return algoritmResult.Comment;
         }
@@ -365,7 +368,7 @@ namespace GraphControl
             SelectedNodesByProg = algoritmResult.Nodes;
             SelectedEdgesByProg = algoritmResult.Edges;
 
-            ShowElementsSelectedByProgram = true;
+            ShowElementsSelectedByProgram = algoritmResult.Success;
             Invalidate();
             return algoritmResult.Comment;
         }
@@ -376,7 +379,27 @@ namespace GraphControl
         /// <returns>True - если циклы в графе есть, иначе - false.</returns>
         public string FindLoops()
         {
+            ShowElementsSelectedByProgram = false;
             return (graph.ContainsLoop()) ? "Граф содержит циклы." : "Граф не содержит циклов.";
         }
+
+        /// <summary>
+        /// Выполняет поиск кратчайшего пути по алгоритму Дейкстры.
+        /// Начальная и конечная вершины выбираются из списка SelectedNodesByUser.
+        /// </summary>
+        /// <returns>Комментарий по выполнению алгоритма.</returns>
+        public string ShortestPath()
+        {
+            if (SelectedNodesByUser.Count != 2 || SelectedEdgesByUser.Count != 0)
+                throw new InvalidOperationException("Для создания ребра в графе должны быть выделены только две вершины.");
+
+            AlgoritmResult<NodeData, EdgeData> algoritmResult = graph.ShortestPath(SelectedNodesByUser[0], SelectedNodesByUser[1]);
+            SelectedNodesByProg = algoritmResult.Nodes;
+            SelectedEdgesByProg = algoritmResult.Edges;
+            ShowElementsSelectedByProgram = algoritmResult.Success;
+            Invalidate();
+            return algoritmResult.Comment;
+        }
+        #endregion
     }
 }
