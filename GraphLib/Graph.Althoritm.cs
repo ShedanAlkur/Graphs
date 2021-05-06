@@ -185,13 +185,85 @@ namespace GraphLib
                 return new AlgoritmResult<N, E>(false, "Невозможно применить алгоритм - в графе содержатся и ориентированные, и неориентированные ребра.", null, null);
         }
 
+        /// <summary>
+        /// Выполняет поиск кратчайшего пути по алгоритму Дейкстры.
+        /// </summary>
+        /// <param name="start">Начальная вершина пути.</param>
+        /// <param name="end">Конечная вершина пути.</param>
+        /// <returns>Результат выполнения алгоритма.</returns>
         public AlgoritmResult<N, E> ShortestPath(Node<N, E> start, Node<N, E> end)
         {
             if (!nodes.Contains(start) || !nodes.Contains(end))
                 throw new ArgumentException("Граф не содержит указанные вершины-параметры");
 
+            if (Unweighted)
+                return new AlgoritmResult<N, E>(false, "Невозможно применить алгоритм - в графе все ребра должны быть взвешены.", null, null);
 
-            throw new NotImplementedException();
+            bool directed = Directed;
+            if (!directed && !Undirected)
+                throw new InvalidOperationException("Граф должен быть строго ориентирован или не ориентирован.");
+
+            bool[] used = new bool[nodes.Count];
+            float[] path = new float[nodes.Count];
+            for (int i = 0; i < path.Length; i++) path[i] = float.PositiveInfinity;
+            int indexOfStart = nodes.IndexOf(start);
+            int indexOfEnd = nodes.IndexOf(end);
+
+            path[indexOfStart] = 0;
+            int currentIndex;
+            // Обход с нахождением кратчайших путей
+            while (used.Contains(false))
+            {
+                currentIndex = -1;
+                float minPath = float.PositiveInfinity;
+                for (int i = 0; i < path.Length; i++)
+                    if (!used[i] && path[i] < minPath)
+                    {
+                        currentIndex = i;
+                        minPath = path[i];
+                    }
+                if (currentIndex == -1) break;
+
+                foreach (var edge in nodes[currentIndex].edges)
+                {
+                    if (directed && edge.Node1 != nodes[currentIndex]) continue; // Если ребро входящее
+
+                    int nearIndex = nodes.IndexOf(edge.Pair(nodes[currentIndex]));
+                    if (used[nearIndex]) continue;
+
+                    if (path[currentIndex] + edge.Weight < path[nearIndex])
+                        path[nearIndex] = path[currentIndex] + edge.Weight;
+                }
+                used[currentIndex] = true;
+            }
+            if (path[indexOfEnd] == float.PositiveInfinity)
+                return new AlgoritmResult<N, E>(false, $"Не существует кратчайшего пути из вершины {nodes[indexOfStart].Id} в {nodes[indexOfEnd].Id}", null, null);
+
+            // Восстановление пути по длинам
+            List<Node<N, E>> resultNodes = new List<Node<N, E>>();
+            List<Edge<N, E>> resultEdges = new List<Edge<N, E>>();
+            resultNodes.Add(nodes[indexOfEnd]);
+            currentIndex = indexOfEnd;
+            while (currentIndex != indexOfStart)
+                foreach (var edge in nodes[currentIndex].edges)
+                {
+                    if (directed && edge.Node1 == nodes[currentIndex]) continue; // Если ребро выходящее
+
+                    int nearIndex = nodes.IndexOf(edge.Pair(nodes[currentIndex]));
+                    if (path[currentIndex] - edge.Weight == path[nearIndex])
+                    {
+                        resultEdges.Add(edge);
+                        resultNodes.Add(nodes[nearIndex]);
+                        currentIndex = nearIndex;
+                        break;
+                    }
+                }
+            string comment = $"Кратчайший путь длиной {path[indexOfEnd]}. ";
+            comment += resultNodes[resultNodes.Count - 1].Id;
+            for (int i = resultNodes.Count - 2; i >= 0; i--)
+                comment += "→" + nodes[i].Id;
+            comment += ".";
+            return new AlgoritmResult<N, E>(true, comment, resultNodes, resultEdges);
         }
     }
 }
