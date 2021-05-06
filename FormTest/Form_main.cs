@@ -20,9 +20,19 @@ namespace FormTest
         ApplyAlgoritm,
     }
 
+    public enum ApplyAlgorithm
+    {
+        None,
+        FindEvenNodes,
+        MinimumSpanningTree,
+        FindLoops,
+        ShortestPath,
+    }
+
     public partial class Form_main : Form
     {
-        GraphInteractionMode mode = GraphInteractionMode.AddingNode;
+        GraphInteractionMode graphMode = GraphInteractionMode.AddingNode;
+        ApplyAlgorithm applyAlgorithm = ApplyAlgorithm.None;
 
         public Form_main()
         {
@@ -37,14 +47,14 @@ namespace FormTest
             try
             {
                 if (e.Button == MouseButtons.Left)
-                    switch (mode)
+                    switch (graphMode)
                     {
                         case GraphInteractionMode.Selecting:
                             control.Selection(e.Location, !ModifierKeys.HasFlag(Keys.Control));
                             break;
                         case GraphInteractionMode.AddingEdge:
                             {
-                                if (control.SelectionEdgeCount != 0) control.ClearEdgeSelection();
+                                if (control.SelectionEdgeCount != 0) control.ClearSelection();
                                 if (control.SelectionNodeCount == 0)
                                     control.NodeSelection(e.Location, false);
                                 else if (control.SelectionNodeCount == 1)
@@ -58,6 +68,28 @@ namespace FormTest
                             control.AddNode(e.Location);
                             break;
                         case GraphInteractionMode.ApplyAlgoritm:
+                            switch (applyAlgorithm)
+                            {
+                                case ApplyAlgorithm.None:
+                                case ApplyAlgorithm.FindEvenNodes:
+                                case ApplyAlgorithm.MinimumSpanningTree:
+                                case ApplyAlgorithm.FindLoops:
+                                    break;
+                                case ApplyAlgorithm.ShortestPath:
+                                    {
+                                        if (control.SelectionEdgeCount != 0) control.ClearEdgeSelection();
+                                        if (control.SelectionNodeCount == 0)
+                                            control.NodeSelection(e.Location, false);
+                                        else if (control.SelectionNodeCount == 1)
+                                        {
+                                            control.NodeSelection(e.Location, false);
+                                            label_comment.Text = control.ShortestPath();
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    throw new NotImplementedException();
+                            }
                             break;
                         case GraphInteractionMode.MovingNode:
                             {
@@ -96,6 +128,7 @@ namespace FormTest
             tsslbl_mode.Text = "Текущий режим: добавление вершины";
 
             cb_algoritms.Items.Add("Поиск минимального оставного дерева");
+            cb_algoritms.Items.Add("Поиск кратчайшего пути");
             cb_algoritms.SelectedIndex = 0;
             cb_algoritms.Items.Add("Поиск вершин с четными номерами");
             cb_algoritms.Items.Add("Поиск цикла");
@@ -123,7 +156,7 @@ namespace FormTest
         private void btn_addNode_Click(object sender, EventArgs e)
         {
             tsslbl_mode.Text = "Режим: добавление вершины";
-            mode = GraphInteractionMode.AddingNode;
+            graphMode = GraphInteractionMode.AddingNode;
             graphControl1.ShowElementsSelectedByProgram = false;
             label_comment.Text = "Укажите позицию для добавления вершины в граф.";
         }
@@ -131,7 +164,7 @@ namespace FormTest
         private void btn_moveNode_Click(object sender, EventArgs e)
         {
             tsslbl_mode.Text = "Режим: перемещение вершины";
-            mode = GraphInteractionMode.MovingNode;
+            graphMode = GraphInteractionMode.MovingNode;
             graphControl1.ShowElementsSelectedByProgram = false;
             label_comment.Text = "Выделите вершину и её новую позицию.";
         }
@@ -139,21 +172,22 @@ namespace FormTest
         private void btn_remove_Click(object sender, EventArgs e)
         {
             tsslbl_mode.Text = "Режим: удаление элемента";
-            mode = GraphInteractionMode.Removing;
+            graphMode = GraphInteractionMode.Removing;
             graphControl1.ShowElementsSelectedByProgram = false;
+            graphControl1.ClearSelection();
         }
 
         private void btn_addEdge_Click(object sender, EventArgs e)
         {
             tsslbl_mode.Text = "Режим: добавление ребра";
-            mode = GraphInteractionMode.AddingEdge;
+            graphMode = GraphInteractionMode.AddingEdge;
             graphControl1.ShowElementsSelectedByProgram = false;
             label_comment.Text = "Выделите начальную и конечную вершину ребра.";
         }
 
         private void btn_applyAlgorithm_Click(object sender, EventArgs e)
         {
-            mode = GraphInteractionMode.ApplyAlgoritm;
+            graphMode = GraphInteractionMode.ApplyAlgoritm;
             graphControl1.ShowElementsSelectedByProgram = true;
             
             tsslbl_mode.Text = "Режим: результат алгоритма.";
@@ -163,9 +197,15 @@ namespace FormTest
                     label_comment.Text = graphControl1.MinimumSpanningTree(); 
                     break;
                 case 1:
-                    label_comment.Text = graphControl1.FindEvenNodes();
+                    graphControl1.ClearSelection();
+                    graphControl1.ShowElementsSelectedByProgram = false;
+                    label_comment.Text = "Выберите начальную и конечную вершину для поиска пути.";
+                    applyAlgorithm = ApplyAlgorithm.ShortestPath;
                     break;
                 case 2:
+                    label_comment.Text = graphControl1.FindEvenNodes();
+                    break;
+                case 3:
                     label_comment.Text = graphControl1.FindLoops();
                     graphControl1.ShowElementsSelectedByProgram = false;
                     break;
@@ -174,7 +214,19 @@ namespace FormTest
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Console.WriteLine(graphControl1.FindLoops());
+            graphMode = GraphInteractionMode.ApplyAlgoritm;
+            graphControl1.ShowElementsSelectedByProgram = true;
+
+            tsslbl_mode.Text = "Режим: результат алгоритма.";
+            label_comment.Text = graphControl1.ShortestPath();
+        }
+
+        private void btn_selection_Click(object sender, EventArgs e)
+        {
+            tsslbl_mode.Text = "Режим: выделение";
+            graphMode = GraphInteractionMode.Selecting;
+            graphControl1.ShowElementsSelectedByProgram = false;
+            label_comment.Text = "Укажите позицию выделямого элемента. Нажмите \"ctrl\" для множественного выбора.";
         }
     }
 }
