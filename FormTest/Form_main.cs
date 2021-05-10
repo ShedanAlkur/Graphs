@@ -127,7 +127,7 @@ namespace FormTest
         {
             tsslbl_mode.Text = "Текущий режим: добавление вершины";
 
-            cb_algoritms.Items.Add("Поиск минимального оставного дерева");
+            cb_algoritms.Items.Add("Поиск минимального остовного дерева");
             cb_algoritms.Items.Add("Поиск кратчайшего пути");
             cb_algoritms.SelectedIndex = 0;
             cb_algoritms.Items.Add("Поиск вершин с четными номерами");

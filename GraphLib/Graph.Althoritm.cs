@@ -101,7 +101,7 @@ namespace GraphLib
         }
 
         /// <summary>
-        /// Алгоритм нахождения минимального оставного дерева.
+        /// Алгоритм нахождения минимального остовного дерева.
         /// </summary>
         /// <returns>Результат выполнения алгоритма.</returns>
         public AlgoritmResult<N, E> MinimumSpanningTree()

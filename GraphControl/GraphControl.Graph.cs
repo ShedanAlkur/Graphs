@@ -359,7 +359,7 @@ namespace GraphControl
         }
 
         /// <summary>
-        /// Выполняет поиск минимального оставного дерева в графе.
+        /// Выполняет поиск минимального остовного дерева в графе.
         /// </summary>
         /// <returns>Комментарий по выполнению алгоритма.</returns>
         public string MinimumSpanningTree()
