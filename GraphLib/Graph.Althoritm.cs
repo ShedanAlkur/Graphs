@@ -140,7 +140,8 @@ namespace GraphLib
                         for (int j = 0; j < result.Count; j++)
                         {
                             if (pairFound) break;
-                            if (NodePair.MatchedPair(nodePairs[i], result[j]))
+                            if ((directed && NodePair.MatchedDirectedPair(nodePairs[i], result[j])) ||
+                                (!directed && NodePair.MatchedUndirectedPair(nodePairs[i], result[j])))
                             {
                                 // Добавляем в тестовый граф рассматриваемое ребро.
                                 testGraph.AddNode(nodePairs[i].Node1);
@@ -177,7 +178,7 @@ namespace GraphLib
                 }
                 return new AlgoritmResult<N, E>(true,
                     "Построено минимальное " + 
-                    ((directed) ? "ориентированное" : "неориентированное" + " оставное дерево длиной ") + 
+                    ((directed) ? "ориентированное" : "неориентированное") + " оставное дерево длиной " + 
                     result.Sum(p => p.Value) + ".", resultNodes, resultEdges);
 
             }

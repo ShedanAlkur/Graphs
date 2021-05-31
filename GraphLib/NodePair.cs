@@ -51,5 +51,32 @@ namespace GraphLib
             pair1.Node1 == pair2.Node2 ||
             pair1.Node2 == pair2.Node1;
         }
+
+        /// <summary>
+        /// Может ли пара ориентированных ребер образовать дерево.
+        /// </summary>
+        /// <param name="pair1">Первая пара вершин.</param>
+        /// <param name="pair2">Вторая пара вершин.</param>
+        /// <returns>Имеют ли указанные пары общие вершины.</returns>
+        internal static bool MatchedDirectedPair(NodePair pair1, NodePair pair2)
+        {
+            return pair1.Node2 == pair2.Node1 ||
+            pair2.Node2 == pair1.Node1 ||
+            pair2.Node1 == pair1.Node1;
+        }
+
+        /// <summary>
+        /// Может ли пара неориентированных ребер образовать дерево.
+        /// </summary>
+        /// <param name="pair1">Первая пара вершин.</param>
+        /// <param name="pair2">Вторая пара вершин.</param>
+        /// <returns>Имеют ли указанные пары общие вершины.</returns>
+        internal static bool MatchedUndirectedPair(NodePair pair1, NodePair pair2) =>
+            MatchedPair(pair1, pair2);
+
+        public override string ToString()
+        {
+            return $"edge={Edge}; node1={Node1}; node2={Node2}; value={Value}";
+        }
     }
 }
