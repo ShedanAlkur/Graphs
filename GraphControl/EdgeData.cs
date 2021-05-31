@@ -72,12 +72,14 @@ namespace GraphControl
         {
             if (pos.Y < Math.Min(P1.Y, P2.Y) || pos.Y > Math.Max(P1.Y, P2.Y))
                 return false;
+            if (Math.Abs(P1.X - P2.X) <= width &&
+                Math.Abs(pos.X - P1.X) + Math.Abs(pos.X - P2.X) <= width)
+                return true;
             float ctg = ((float)P2.Y - P1.Y) / (P2.X - P1.X);
             float predictedY = P1.Y + ctg * (pos.X - P1.X);
-            bool located = Math.Abs(pos.Y - predictedY) <= Width;
+            return Math.Abs(pos.Y - predictedY) <= Width;
             //Console.WriteLine($"Ожидается {pos}, получено x = {pos.X} y = ({predictedY - Width};{predictedY + Width})");
 
-            return located;
         }
 
         /// <summary>
