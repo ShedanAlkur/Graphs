@@ -228,5 +228,10 @@ namespace FormTest
             graphControl1.ShowElementsSelectedByProgram = false;
             label_comment.Text = "Укажите позицию выделямого элемента. Нажмите \"ctrl\" для множественного выбора.";
         }
+
+        private void graphControl1_MouseMove(object sender, MouseEventArgs e)
+        {
+            tsslbl_pos.Text = $"X={e.X}; Y={e.Y}";
+        }
     }
 }

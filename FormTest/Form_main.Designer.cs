@@ -280,11 +280,12 @@ namespace FormTest
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.graphControl1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.graphControl1.Location = new System.Drawing.Point(12, 12);
+            this.graphControl1.Location = new System.Drawing.Point(15, 12);
             this.graphControl1.Name = "graphControl1";
             this.graphControl1.Size = new System.Drawing.Size(445, 313);
             this.graphControl1.TabIndex = 26;
             this.graphControl1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.graphControl1_MouseDown);
+            this.graphControl1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphControl1_MouseMove);
             // 
             // Form_main
             // 
